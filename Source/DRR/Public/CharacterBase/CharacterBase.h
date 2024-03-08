@@ -6,6 +6,13 @@
 #include "GameFramework/Character.h"
 #include "CharacterBase.generated.h"
 
+UENUM()
+enum class ECharacterControlType : uint8 
+{
+	Shoulder,
+	Quater
+};
+
 UCLASS()
 class DRR_API ACharacterBase : public ACharacter
 {
@@ -16,14 +23,12 @@ public:
 	ACharacterBase();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
+	virtual void SetCharacterControlData(const class UCharacterControlDataAsset* CharacterControlData);
 
-public:	
+protected:
+	TMap< ECharacterControlType, class UCharacterControlDataAsset*> CharacterControlManager; // 생성자가 호출될떄 같이 메모리 할당
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	
 
