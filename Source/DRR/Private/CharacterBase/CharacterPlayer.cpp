@@ -6,6 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "CharacterBase/CharacterControllDataAsset.h"
+#include "CharacterBase/CharacterBase.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -41,12 +42,8 @@ void ACharacterPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	//입력매핑컨텍스트에서 액션과 함수
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked <UEnhancedInputComponent>(PlayerInputComponent);
 	EnhancedInputComponent->BindAction(QuaterMoveAction, ETriggerEvent::Triggered, this, &ACharacterPlayer::QuaterMove);
-	EnhancedInputComponent->BindAction(ShoulderMoveAction, ETriggerEvent::Triggered, this, &ACharacterPlayer::ShoulderMove);
-	EnhancedInputComponent->BindAction(ShoulderLookAction, ETriggerEvent::Triggered, this, &ACharacterPlayer::ShoulderLook);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-	EnhancedInputComponent->BindAction(ChangeControlAction, ETriggerEvent::Triggered, this, &ACharacterPlayer::ChangeControl);
-
 }
 
 void ACharacterPlayer::SetCharacterControlData(const UCharacterControlDataAsset* CharacterControlData)
@@ -74,11 +71,7 @@ void ACharacterPlayer::SetCharacterControlData(const UCharacterControlDataAsset*
 	CameraBoom->bInheritPitch = CharacterControlData->bInheritPitch;
 	CameraBoom->bInheritYaw = CharacterControlData->bInheritYaw;
 	CameraBoom->bInheritRoll = CharacterControlData->bInheritRoll;
-
 }
-
-
-
 
 void ACharacterPlayer::QuaterMove(const FInputActionValue& Value)
 {
@@ -98,42 +91,6 @@ void ACharacterPlayer::QuaterMove(const FInputActionValue& Value)
 	AddMovementInput(MoveDirection, MovementVectorsizeSquared);
 }
 
-void ACharacterPlayer::ShoulderMove(const FInputActionValue& Value)
-{
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	const FRotator Rotation = Controller->GetControlRotation();
-	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-	AddMovementInput(ForwardDirection, MovementVector.Y);
-	AddMovementInput(RightDirection, MovementVector.X);
-}
-
-void ACharacterPlayer::ShoulderLook(const FInputActionValue& Value)
-{
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	AddControllerYawInput(LookAxisVector.X);
-	AddControllerPitchInput(LookAxisVector.Y);
-}
-
-void ACharacterPlayer::ChangeControl()
-{
-	//현재 캐릭터 컨트롤 타입이 쿼터이면 숄더로 숄더면 쿼터로 전환
-	if (CurrentCharacterControlType == ECharacterControlType::Quater)
-	{
-		CurrentCharacterControlType = ECharacterControlType::Shoulder;
-	}
-	else if (CurrentCharacterControlType == ECharacterControlType::Shoulder)
-	{
-		CurrentCharacterControlType = ECharacterControlType::Quater;
-	}
-
-	SetCharacterControl(CurrentCharacterControlType);
-}
 
 void ACharacterPlayer::SetCharacterControl(ECharacterControlType ControlType)
 {

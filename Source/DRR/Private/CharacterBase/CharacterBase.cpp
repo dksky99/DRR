@@ -9,7 +9,7 @@
 ACharacterBase::ACharacterBase()
 {
 	//Set character capsule
-	GetCapsuleComponent()->InitCapsuleSize(35.0f, 90.0f);
+	GetCapsuleComponent()->InitCapsuleSize(100.0f, 190.0f);
 
 	//Set character collision
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("ABCapsule"));
@@ -39,6 +39,11 @@ ACharacterBase::ACharacterBase()
 		GetMesh()->SetSkeletalMesh(CharacterMeshRef.Object);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UCharacterControlDataAsset> QuaterDataAssetRef(TEXT("/Game/Asset/Character/CharacterControlData/DA_CCQuater.DA_CCQuater"));
+	if (QuaterDataAssetRef.Object)
+	{
+		CharacterControlManager.Add(ECharacterControlType::Quater, QuaterDataAssetRef.Object);
+	}
 
 }
 
@@ -53,7 +58,6 @@ void ACharacterBase::SetCharacterControlData(const UCharacterControlDataAsset* C
 	GetCharacterMovement()->bOrientRotationToMovement = CharacterControlData->bOrientRotationToMovement;
 	GetCharacterMovement()->bUseControllerDesiredRotation = CharacterControlData->bUseControllerDesiredRotation;
 	GetCharacterMovement()->RotationRate = CharacterControlData->RotationRate;
-
 }
 
 

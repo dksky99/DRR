@@ -24,9 +24,6 @@ protected:
 
 private:
 	void QuaterMove(const FInputActionValue& Value);
-	void ShoulderMove(const FInputActionValue& Value);
-	void ShoulderLook(const FInputActionValue& Value);
-	void ChangeControl();
 	void SetCharacterControl(ECharacterControlType ControlType);
 
 protected:
