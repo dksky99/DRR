@@ -3,7 +3,11 @@
 
 #include "PlayerCharacter/PlayerCharacterBase/PlayerCharacterBase.h"
 #include "Components/CapsuleComponent.h"
+#include "Equipment/Weapon/DRRWeaponBase.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "DataAsset/Item/DA_WeaponData.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Utilities/UtilityList.h"
 
 APlayerCharacterBase::APlayerCharacterBase()
 {
@@ -28,6 +32,11 @@ APlayerCharacterBase::APlayerCharacterBase()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.0f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
 
+
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Weapon"));
+	WeaponMesh->SetupAttachment(GetMesh(), TEXT("hand_rSocket"));
+
+
 	//Set Rotation Remit-Kwakhyunbin
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -46,4 +55,30 @@ APlayerCharacterBase::APlayerCharacterBase()
 	{
 		GetMesh()->SetAnimInstanceClass(AnimInstanceClassRef.Class);
 	}
+
+	static ConstructorHelpers::FClassFinder<ADRRWeaponBase> WeaponClassRef(TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Weapon/BP_Weapon1.BP_Weapon1_C'"));
+		CLog::Log(WeaponClassRef.Class);
+	if (WeaponClassRef.Class)
+	{
+		Weapon = WeaponClassRef.Class;
+
+		
+	}
+
 }
+
+void APlayerCharacterBase::BeginPlay()
+{
+	SetWeapon(Weapon);
+}
+
+void APlayerCharacterBase::SetWeapon(TSubclassOf<class ADRRWeaponBase> NewWeapon)
+{
+	Weapon = NewWeapon;
+
+	WeaponObject = NewObject<ADRRWeaponBase>(Weapon);
+
+	
+}
+
+
