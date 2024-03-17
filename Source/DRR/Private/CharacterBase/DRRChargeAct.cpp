@@ -12,6 +12,11 @@ DRRChargeAct::~DRRChargeAct()
 {
 }
 
+void DRRChargeAct::ActRelease()
+{
+	AfterAct();
+}
+
 bool DRRChargeAct::BeginAct()
 {
 	return true;

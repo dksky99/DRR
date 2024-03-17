@@ -15,6 +15,7 @@ public:
 
 	DRRChargeAct(IDRRActableInterface* Target);
 	~DRRChargeAct();
+	virtual void ActRelease() override;
 	virtual bool BeginAct() override;
 	virtual bool NextReset() override;
 	virtual FName GetMontgeSectionName() override;

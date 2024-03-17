@@ -23,7 +23,10 @@ bool DRRShortShotAct::NextReset()
 {
     return false;
 }
-
+float DRRShortShotAct::GetNextTime()
+{
+    return CurAct->EffectiveFrameCount[0] / CurAct->FrameRate;
+}
 
 
 

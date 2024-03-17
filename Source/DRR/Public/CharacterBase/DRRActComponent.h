@@ -34,7 +34,9 @@ public:
 	// Sets default values for this component's properties
 	UDRRActComponent();
 
-	void Act(class IDRRActableInterface* Actable);
+	void Act(class IDRRActableInterface* Actable); 
+	void ActRelease(class IDRRActableInterface* Actable);
+
 	
 	void ActFunc();
 protected:

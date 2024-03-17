@@ -14,10 +14,11 @@ class DRR_API DRRAct
 public:
 
 	DRRAct(class IDRRActableInterface* Target);
+	virtual void ActRelease();
 	const class UDA_ActData* GetCurAct();
 	virtual bool AfterAct();
 	~DRRAct();
-	float GetNextTime();
+	virtual float GetNextTime();
 	virtual uint8 NextAct();
 	virtual bool NextReset();
 	void DoAct();

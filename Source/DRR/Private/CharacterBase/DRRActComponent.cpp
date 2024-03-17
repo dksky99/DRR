@@ -18,6 +18,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Components/CapsuleComponent.h"
+
+#include "Utilities/UtilityList.h"
+
 // Sets default values for this component's properties
 UDRRActComponent::UDRRActComponent()
 {
@@ -65,8 +68,12 @@ void UDRRActComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UDRRActComponent::Act(IDRRActableInterface* Actable)
 {
+
+	CLog::Log("Act");
 	if (Actor == nullptr)
 	{
+
+		CLog::Log("Begin");
 		EraseAct();
 		ActActions[(uint8)Actable->GetActData()->Type].ActDelegate.ExecuteIfBound(Actable);
 		BeginAct();
@@ -75,6 +82,8 @@ void UDRRActComponent::Act(IDRRActableInterface* Actable)
 	//같은 명령이라면 같은 행동선에서 다른 행동. 아니라면 새로운 행동
 	if (Actor->GetCurAct()->ActionName.Equals(Actable->GetActData()->ActionName))
 	{
+
+		CLog::Log("Second");
 		AfterAct();
 
 		return;
@@ -82,8 +91,18 @@ void UDRRActComponent::Act(IDRRActableInterface* Actable)
 
 }
 
+void UDRRActComponent::ActRelease(IDRRActableInterface* Actable)
+{
+	if (Actor == nullptr)
+	{
+		return;
+	}
+	Actor->ActRelease();
+}
+
 void UDRRActComponent::ActFunc()
 {
+	CLog::Log("ActFunc");
 
 	if (Actor == nullptr)
 	{
@@ -97,30 +116,36 @@ void UDRRActComponent::ActFunc()
 
 void UDRRActComponent::ShortShot( IDRRActableInterface* Target)
 {
+	CLog::Log("ShortShot");
 	Actor = new DRRShortShotAct(Target);
 	
 }
 
 void UDRRActComponent::Charging(IDRRActableInterface* Target)
 {
+	CLog::Log("Charging");
 	Actor = new DRRChargeAct(Target);
 }
 
 void UDRRActComponent::Casting(IDRRActableInterface* Target)
 {
+	CLog::Log("Casting");
 	Actor = new DRRCastAct(Target);
 	
 }
 
 void UDRRActComponent::Combo(IDRRActableInterface* Target)
 {
+	CLog::Log("Combo");
 	Actor = new DRRComboAct(Target);
 
 }
 
 void UDRRActComponent::BeginAct()
 {
-	
+
+	CLog::Log("UDRRActComponent::BeginAct");
+
 	UAnimInstance* animInstance = Cast<ACharacter>(GetOwner())->GetMesh()->GetAnimInstance();
 	//몽타주 실행
 	animInstance->Montage_Play(Actor->GetCurAct()->ActionMontage);
@@ -151,16 +176,20 @@ void UDRRActComponent::CheckAct()
 {
 	//콤보타이머 핸들 비활성화
 	ActTimerHandle.Invalidate();
+	CLog::Log("UDRRActComponent::CheckAct");
 
 
 	if (hasNextAct)
 	{
+		CLog::Log(hasNextAct);
+		
 		uint8 curActCount=Actor->NextAct();
 
+		ActFunc();
 		UAnimInstance* animInstance = Cast<ACharacter>(GetOwner())->GetMesh()->GetAnimInstance();
-		FString CombineString = Actor->GetCurAct()->MontageSectionPrefix + FString::FromInt(curActCount);
 		//실행할 색션이름 지정 포맷 FString 앞에는 *을 꼭붙여줘야함
-		FName nextSectionName(*CombineString);
+		FName nextSectionName(Actor->GetMontgeSectionName());
+		CLog::Log(nextSectionName.ToString());
 			//몽타주 실행
 		//몽타주의 특정 이름의 액션 실행 
 		animInstance->Montage_JumpToSection(nextSectionName, Actor->GetCurAct()->ActionMontage);
@@ -174,6 +203,7 @@ void UDRRActComponent::CheckAct()
 
 void UDRRActComponent::EndAct(UAnimMontage* targetMontage, bool isInteruped)
 {
+	CLog::Log("UDRRActComponent::EndAct");
 	EraseAct();
 
 }

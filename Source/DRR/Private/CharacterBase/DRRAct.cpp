@@ -3,12 +3,20 @@
 
 #include "CharacterBase/DRRAct.h"
 #include "Interface/DRRActableInterface.h"
+#include "Utilities/UtilityList.h"
 
 DRRAct::DRRAct(IDRRActableInterface* Target)
 {
+	CLog::Log("DDRAct");
 	SetActs(Target);
+	CLog::Log(Target == nullptr);
 	CurAct = Target->GetActData();
 	BeginAct();
+}
+
+void DRRAct::ActRelease()
+{
+
 }
 
 DRRAct::~DRRAct()
@@ -30,6 +38,9 @@ float DRRAct::GetNextTime()
 uint8 DRRAct::NextAct()
 {
 	//범위를 1~4까지로 제한
+
+	CLog::Log("DRRAct::NextAct");
+	CLog::Log(curActCount);
 	return curActCount = FMath::Clamp(curActCount + 1, 1, CurAct->MaxActCount);
 }
 
@@ -40,6 +51,7 @@ bool DRRAct::NextReset()
 
 void DRRAct::DoAct()
 {
+	CLog::Log("DRRAct::DoAct");
 	ActFunc[curActCount - 1].Execute();
 }
 
@@ -51,6 +63,7 @@ const UDA_ActData* DRRAct::GetCurAct()
 bool DRRAct::BeginAct()
 {
 
+	CLog::Log("DRRAct::BeginAct");
 	curActCount = 1;
 	return false;
 
@@ -58,6 +71,7 @@ bool DRRAct::BeginAct()
 
 FName DRRAct::GetMontgeSectionName()
 {
+	CLog::Log("DRRAct::GetMontgeSectionName");
 	return FName(TEXT("Default"));
 }
 
@@ -76,7 +90,9 @@ bool DRRAct::AfterAct()
 
 void DRRAct::SetActs(IDRRActableInterface* Target)
 {
-	FActionDelegate Temp;
+	CLog::Log("DRRAct::SetActs");
 	ActFunc = Target->GetActFunc();
+	CLog::Log(ActFunc.Num());
+	
 	
 }

@@ -16,6 +16,7 @@ public:
 	~DRRShortShotAct();
 	virtual bool BeginAct() override;
 	virtual bool NextReset() override;
+	virtual float GetNextTime() override;
 
 protected:
 	virtual void EndAct() override;
