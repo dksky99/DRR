@@ -10,14 +10,22 @@
 /**
  * 
  */
+
+//DECLARE_MULTICAST_DELEGATE(FOnHPZeroDelegate);
+//DECLARE_MULTICAST_DELEGATE_OneParam(FOnHPChangeDelegate, float /*CurrentHP*/);
+
 UCLASS()
 class AEnemyCharacterBase : public ACharacterBase
 {
 	GENERATED_BODY()
 	
+public:
 	AEnemyCharacterBase();
+	AEnemyCharacterBase(int Type);
 
 protected:
+
+	uint16 EnemyType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Name")
 	FString EnemyName;
@@ -72,6 +80,22 @@ protected:
 
 	class UAISensingConfig_Sight* Sight;
 
+	uint16 Level;
+
+	float difficulty=20;
+
 public:
 	void OnPerception(AActor* Actor, FAIStimulus stimulus);
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+
+	// UI Widget Component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stat, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UWidgetComponent> EnemyHPBar;
+
+	void SetHP(float NewHP);
+
+	//FOnHPZeroDelegate OnHPZero;
+	//FOnHPChangeDelegate OnHPChange;
 };

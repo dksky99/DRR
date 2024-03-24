@@ -68,6 +68,24 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Senssing")
     float SoundCheckLenge;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float HP;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float PhysicsAttackCoefficient;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float MagicAttackCoefficient;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float PhysicsDefCoefficient;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float MagicDefCoefficient;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "State")
+    float HPRegenerationSpeed;
+
 };
 
 UCLASS()
